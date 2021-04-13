@@ -1,10 +1,10 @@
-How-to-run:
+# How-to-run
 
 
 todo
 
 
-My Notes:
+# My Notes
 
 Make it runnable with different command line args (simplest version first - easiest to implement):
   x) "{where it runs} _ {data input} _ {state persistence} _ {data output}"
@@ -25,7 +25,7 @@ These would rightfully be interpreted as scope creep, but otherwise good ideas:
 
 
 
-Problem Statement:
+# Problem Statement
 
 In finance, it's common for accounts to have so-called "velocity limits". In this task, you'll write a program that accepts or declines attempts to load funds into customers' accounts in real-time.
 
