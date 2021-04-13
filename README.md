@@ -17,7 +17,7 @@ These can be made more customizable with a config file. Start with that, because
 Read: https://medium.com/rungo/anatomy-of-modules-in-go-c8274d215c16
 
 These would rightfully be interpreted as scope creep, but otherwise good ideas:
-- 4) "gae_http_cloudsql_http"       Runs on Google App Engine, receiving data in HTTP request, persisting state to Cloud SQL DB, outputting by HTTP response.
+- `4) "gae_http_cloudsql_http"       Runs on Google App Engine, receiving data in HTTP request, persisting state to Cloud SQL DB, outputting by HTTP response.`
   - Out-of-scope, because while I might be able to deploy a barebones GAE Go app in time, I wouldn't be able to spend the time necessary to secure it; and the assignment asked for no public hosting of the solution. I will assume that extends to the deployed solution, not just source code.
 - Have a config to run the application as a web app, and create another web app to send the original web app the input (a simple version of this could make a good test case for the local_http_file_http scenario though).
 - Purge db data older than a month with Cron job.
