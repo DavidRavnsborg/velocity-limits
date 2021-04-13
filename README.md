@@ -7,17 +7,19 @@ todo
 # My Notes
 
 Make it runnable with different command line args (simplest version first - easiest to implement):
-  x) "{where it runs} _ {data input} _ {state persistence} _ {data output}"
-  1) "local_file_memory_std"        Runs locally, loading data from local file, persisting state in memory, outputting in std io. 
-  2) "local_file_file_file"         Runs locally, loading data from local file, persisting state in local files, outputting in file.
-  3) "local_http_file_http"         Runs locally, receiving data in HTTP request, persisting state in local files, outputting in HTTP response.
+
+  `x. "{where it runs} _ {data input} _ {state persistence} _ {data output}"`
+  1. "local_file_memory_std"        Runs locally, loading data from local file, persisting state in memory, outputting in std io. 
+  2. "local_file_file_file"         Runs locally, loading data from local file, persisting state in local files, outputting in file.
+  3. "local_http_file_http"         Runs locally, receiving data in HTTP request, persisting state in local files, outputting in HTTP response.
+  
 
 These can be made more customizable with a config file. Start with that, because it will make for less re-work later on. The config file can be written in Go, to allow for easy dependency injection, which would also make it easily configurable, particularly if I use seemingly common built-in Go interfaces like Reader and Writer. I will put the business logic in a separate package/module. 
 
 Read: https://medium.com/rungo/anatomy-of-modules-in-go-c8274d215c16
 
 These would rightfully be interpreted as scope creep, but otherwise good ideas:
-- `4) "gae_http_cloudsql_http"       Runs on Google App Engine, receiving data in HTTP request, persisting state to Cloud SQL DB, outputting by HTTP response.`
+- `4. "gae_http_cloudsql_http"       Runs on Google App Engine, receiving data in HTTP request, persisting state to Cloud SQL DB, outputting by HTTP response.`
   - Out-of-scope, because while I might be able to deploy a barebones GAE Go app in time, I wouldn't be able to spend the time necessary to secure it; and the assignment asked for no public hosting of the solution. I will assume that extends to the deployed solution, not just source code.
 - Have a config to run the application as a web app, and create another web app to send the original web app the input (a simple version of this could make a good test case for the local_http_file_http scenario though).
 - Purge db data older than a month with Cron job.
