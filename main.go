@@ -18,14 +18,15 @@ func main() {
 
 	requests := loadData()
 
-	for _, request := range requests {
-		request.handleRequest()
-		// fundResponse := request.handleRequest()
-		// fmt.Println(fundResponse)
+	for _, req := range requests {
+		res := req.handleRequest()
+		if !res.Accepted {
+			fmt.Println(res)
+		}
 	}
 
 	// TODO: Find out why this is empty (probably need to set it again somewhere)
-	fmt.Println(fundSuccessDB)
+	// fmt.Println(fundSuccessDB)
 
 	// ioutil.WriteFile("output.txt")
 
@@ -77,7 +78,6 @@ func (req FundRequest) handleRequest() (res FundResponse) {
 	if accepted {
 		fundSuccessDB[req.CustomerId] = append(table, FundSuccessRecord{
 			Id:         req.Id,
-			CustomerId: req.CustomerId,
 			LoadAmount: reqAmount,
 			Time:       reqTime,
 		})
