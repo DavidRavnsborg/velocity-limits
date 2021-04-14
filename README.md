@@ -6,6 +6,12 @@ todo
 
 # My Notes
 
+### April 13, 2021
+Just create versions 1 and 2. That will accomplish the easily extensible design I'm going for, while keeping complexity and number of new language features I need to learn and utilize this week to a minimum.
+
+### April 11, 2021
+Completed Go crash course. Start by creating the simplest version of the application.
+
 Make it runnable with different command line args (simplest version first - easiest to implement):
 
   `x. "{where it runs} _ {data input} _ {state persistence} _ {data output}"`
@@ -22,7 +28,7 @@ These would rightfully be interpreted as scope creep, but otherwise good ideas:
 - `4. "gae_http_cloudsql_http"       Runs on Google App Engine, receiving data in HTTP request, persisting state to Cloud SQL DB, outputting by HTTP response.`
   - Out-of-scope, because while I might be able to deploy a barebones GAE Go app in time, I wouldn't be able to spend the time necessary to secure it; and the assignment asked for no public hosting of the solution. I will assume that extends to the deployed solution, not just source code.
 - Have a config to run the application as a web app, and create another web app to send the original web app the input (a simple version of this could make a good test case for the local_http_file_http scenario though).
-- Purge db data older than a month with Cron job.
+- Purge db data older than a month (possibly with Cron job).
   - If I am getting into lifecycle management of data, I should be asking questions like "how long should my data persist for business, or regulatory reasons? Should there be backups? Etc."; but that level of detail doesn't exist for this problem. However, this would be a question to ask in a follow-up meeting with the client, product owner, lawyer, or stakeholder.
 
 
