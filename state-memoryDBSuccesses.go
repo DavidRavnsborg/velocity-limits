@@ -4,7 +4,7 @@ import (
 	"time"
 )
 
-// Would ideally load/fetch these from another place, so we can easily change our rates without changing source code.
+// Would ideally load/fetch these from another place, so we can change our limits without changing source code, unless these always remain fixed.
 const dailyAmountLimit = 5000
 const weeklyAmountLimit = 20000
 const dailyTransactionLimit = 3
@@ -13,19 +13,9 @@ type FundSuccessDB map[string]FundSuccessTable
 
 type FundSuccessTable []FundSuccessRecord
 
-type FundSuccessRecord struct {
-	Id         string
-	LoadAmount float64
-	Time       time.Time
-}
-
-func (table FundSuccessTable) isUniqueTransaction(id string) bool {
-	for _, records := range table {
-		if records.Id == id {
-			return false
-		}
-	}
-	return true
+func (table FundSuccessTable) updateSuccessAmount(success FundSuccessRecord, customerId string) (err error) {
+	fundSuccessDB[customerId] = append(table, success)
+	return nil
 }
 
 func (table FundSuccessTable) isUnderDailyAmount(requestTime time.Time, amountToAdd float64) bool {
@@ -36,6 +26,7 @@ func (table FundSuccessTable) isUnderDailyAmount(requestTime time.Time, amountTo
 	return amount <= dailyAmountLimit
 }
 
+// TODO: This needs to always start on Monday at 00:00:00, not the past full week.
 func (table FundSuccessTable) isUnderWeeklyAmount(requestTime time.Time, amountToAdd float64) bool {
 	dailyOffset, _ := time.ParseDuration("-144h")
 	year, month, day := requestTime.Date()
@@ -54,7 +45,7 @@ func (table FundSuccessTable) isUnderDailyTransactions(requestTime time.Time) bo
 
 func getCumulativeAmountFunded(table FundSuccessTable, startDate time.Time, endDateTime time.Time) (amount float64) {
 	// startDate should start at 00:00:00 on its respective date.
-	// endTime should be whatever time a request was sent at.
+	// endDateTime should be whatever time a request was sent at.
 	amount = 0.0
 	for _, record := range table {
 		if (record.Time.After(startDate) || record.Time == startDate) && record.Time.Before(endDateTime) {

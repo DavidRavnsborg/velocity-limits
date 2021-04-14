@@ -6,8 +6,12 @@ todo
 
 # My Notes
 
+### April 14, 2021
+line 687 of the output-test.txt has an extra line with the value: {"id":"6928","customer_id":"562","accepted":true}
+It is the only discrepancy between output.txt and output-test.txt. There appears to be a duplicate id on the same customer, so see why it wasn't filtered out.
+
 ### April 13, 2021
-Just create versions 1 and 2. That will accomplish the easily extensible design I'm going for, while keeping complexity and number of new language features I need to learn and utilize this week to a minimum.
+Create only version 1, but design it using an interface that can be used by other versions for the persistence layer (I.e. if the persistence layer was a DB, the Go wrapper for it could implement the Limits interface). That will accomplish the easily extensible design I'm going for, while keeping complexity low, as this project is already taking quite a bit of my afterwork time. I'd rather polish the core design and testing of this app than try to cram more features into it.
 
 ### April 11, 2021
 Completed Go crash course. Start by creating the simplest version of the application.
@@ -20,7 +24,7 @@ Make it runnable with different command line args (simplest version first - easi
   3. "local_http_file_http"         Runs locally, receiving data in HTTP request, persisting state in local files, outputting in HTTP response.
   
 
-These can be made more customizable with a config file. Start with that, because it will make for less re-work later on. The config file can be written in Go, to allow for easy dependency injection, which would also make it easily configurable, particularly if I use seemingly common built-in Go interfaces like Reader and Writer. I will put the business logic in a separate package/module. 
+These can be made more customizable with a config file. The config file can be written in Go, to allow for easy dependency injection, which would also make it easily configurable, particularly if I use seemingly common built-in Go interfaces like Reader and Writer. I will put the business logic in a separate package/module. 
 
 Read: https://medium.com/rungo/anatomy-of-modules-in-go-c8274d215c16
 

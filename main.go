@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -10,28 +11,32 @@ import (
 )
 
 const input_src = "input.txt"
+const output_src = "output-test.txt"
 
-// const output_src = "output.txt"
 var fundSuccessDB = make(FundSuccessDB)
+var responses = make(ResponsesTable, 0)
 
 func main() {
-
 	requests := loadData()
 
 	for _, req := range requests {
-		res := req.handleRequest()
-		if !res.Accepted {
-			fmt.Println(res)
+		res, err := req.handleRequest()
+		if err != nil {
+			if err.Error() == NonUniqueIdError {
+				continue
+			} else {
+				handleError(err)
+			}
 		}
+		responses = append(responses, res)
 	}
 
-	// TODO: Find out why this is empty (probably need to set it again somewhere)
-	// fmt.Println(fundSuccessDB)
+	var output_buffer bytes.Buffer
+	for _, response := range responses {
+		output_buffer.WriteString(fmt.Sprintf(`{"id":"%s","customer_id":"%s","accepted":%v}`+"\n", response.Id, response.CustomerId, response.Accepted))
+	}
 
-	// ioutil.WriteFile("output.txt")
-
-	// Test running a function from another file in the main package
-	// config_test()
+	ioutil.WriteFile(output_src, output_buffer.Bytes(), 0666)
 }
 
 func loadData() []FundRequest {
@@ -58,10 +63,9 @@ func loadData() []FundRequest {
 	return fundRequests
 }
 
-func (req FundRequest) handleRequest() (res FundResponse) {
+func (req FundRequest) handleRequest() (res FundResponse, err error) {
 	var reqAmount float64
 	var reqTime time.Time
-	var err error
 
 	reqAmount, err = strconv.ParseFloat(string(req.LoadAmount[1:]), 64)
 	if err != nil {
@@ -74,18 +78,26 @@ func (req FundRequest) handleRequest() (res FundResponse) {
 	}
 
 	table := fundSuccessDB[req.CustomerId]
-	accepted := checkConditions(table, req.Id, reqAmount, reqTime)
+	accepted, err := checkConditions(table, responses, req.Id, req.CustomerId, reqAmount, reqTime)
+	if err != nil {
+		if err.Error() == NonUniqueIdError {
+			return FundResponse{}, err
+		} else {
+			handleError(err)
+		}
+	}
 	if accepted {
-		fundSuccessDB[req.CustomerId] = append(table, FundSuccessRecord{
+		table.updateSuccessAmount(FundSuccessRecord{
 			Id:         req.Id,
 			LoadAmount: reqAmount,
 			Time:       reqTime,
-		})
+			Accepted:   accepted,
+		}, req.CustomerId)
 	}
 
 	return FundResponse{
 		Id:         req.Id,
 		CustomerId: req.CustomerId,
 		Accepted:   accepted,
-	}
+	}, nil
 }
