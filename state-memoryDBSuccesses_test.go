@@ -67,11 +67,6 @@ func TestFundLimitsDBNegative(t *testing.T) {
 	fundDepositDate, _ := time.Parse(time.RFC3339, "2021-01-07T00:13:00Z")
 	var approved bool
 
-	// approved = db["1"].isUniqueTransaction("1")
-	// if approved {
-	// 	t.Errorf("Expected fund request to be declined as it is not a unique transaction.")
-	// }
-
 	approved = db["1"].isUnderDailyAmount(fundDepositDate, 4501)
 	if approved {
 		t.Errorf("Expected fund request to be declined as it is over the daily limit.")
