@@ -5,7 +5,6 @@ import (
 	"time"
 )
 
-// func setupTestDB(customerId string, distantPastTimestamp time.Time, underSevenDaysTimestamp time.Time, underOneDayTimestamp time.Time) (db FundSuccessDB) {
 func setupTestSuccessesDB(customerId string, amounts float64, extraEmptyAmountTransactionsToday int) (db FundSuccessDB) {
 	db = make(FundSuccessDB)
 	distantPastTimestamp, _ := time.Parse(time.RFC3339, "2000-01-01T00:00:00Z")

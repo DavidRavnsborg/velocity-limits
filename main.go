@@ -19,31 +19,7 @@ var responses = make(ResponsesTable, 0)
 
 func main() {
 	requests := loadData()
-	handleBatchRequests(requests)
-}
-
-func handleBatchRequests(requests []FundRequest) {
-	for _, req := range requests {
-		res, err := req.handleRequest()
-		if err != nil {
-			if err.Error() == NonUniqueIdError {
-				continue
-			} else {
-				handleError(err)
-			}
-		}
-		responses = append(responses, res)
-	}
-
-	var output_buffer bytes.Buffer
-	for _, response := range responses {
-		output_buffer.WriteString(fmt.Sprintf(`{"id":"%s","customer_id":"%s","accepted":%v}`+"\n", response.Id, response.CustomerId, response.Accepted))
-	}
-
-	err := ioutil.WriteFile(output_target, output_buffer.Bytes(), 0666)
-	if err != nil {
-		handleError(err)
-	}
+	handleBatchRequestsWriteToFile(requests)
 }
 
 func loadData() []FundRequest {
@@ -68,6 +44,30 @@ func loadData() []FundRequest {
 	}
 
 	return fundRequests
+}
+
+func handleBatchRequestsWriteToFile(requests []FundRequest) {
+	for _, req := range requests {
+		res, err := req.handleRequest()
+		if err != nil {
+			if err.Error() == NonUniqueIdError {
+				continue
+			} else {
+				handleError(err)
+			}
+		}
+		responses = append(responses, res)
+	}
+
+	var output_buffer bytes.Buffer
+	for _, response := range responses {
+		output_buffer.WriteString(fmt.Sprintf(`{"id":"%s","customer_id":"%s","accepted":%v}`+"\n", response.Id, response.CustomerId, response.Accepted))
+	}
+
+	err := ioutil.WriteFile(output_target, output_buffer.Bytes(), 0666)
+	if err != nil {
+		handleError(err)
+	}
 }
 
 func (req FundRequest) handleRequest() (res FundResponse, err error) {

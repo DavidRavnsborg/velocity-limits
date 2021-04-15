@@ -1,20 +1,24 @@
+# Overview
+
 # How-to-run
 
 Run with `go run .`
 
 Test with `go test`
 
-# My Notes
+# My Development Notes
 
-### April 14, 2021
+## April 14, 2021
 line 687 of the output-test.txt has an extra line with the value: {"id":"6928","customer_id":"562","accepted":true}
 It is the only discrepancy between output.txt and output-test.txt. There appears to be a duplicate id on the same customer, so see why it wasn't filtered out.
 FIXED: I needed another table, the Responses table, since non-approved responses aren't logged in the Success table (which is used for checking velocity limits on amounts/transactions).
 
-### April 13, 2021
-Create only version 1, but design it using an interface that can be used by other versions for the persistence layer (I.e. if the persistence layer was a DB, the Go wrapper for it could implement the Limits interface). That will accomplish the easily extensible design I'm going for, while keeping complexity low, as this project is already taking quite a bit of my afterwork time. I'd rather polish the core design and testing of this app than try to cram more features into it.
+I finished adding tests for the ResponsesTable and FundSuccessTable. I also fixed the length of the history for weekly limits (it should only go back to Monday of the current week at 00:00:00).
 
-### April 11, 2021
+## April 13, 2021
+Create only one version given the time constraints, but design it using an interface that can be used by other versions for the persistence layer (I.e. if the persistence layer was a DB, the Go wrapper for it could implement the Limits interface). That will accomplish the extensible design I'm going for, while keeping complexity low, as this project is already taking quite a bit of my afterwork time. I'd rather polish the core design and testing of this app than try to cram more features into it.
+
+## April 11, 2021
 Completed Go crash course. Start by creating the simplest version of the application.
 
 Make it runnable with different command line args (simplest version first - easiest to implement):
