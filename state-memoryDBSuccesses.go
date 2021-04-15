@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"time"
 )
 
@@ -18,7 +19,7 @@ func (table FundSuccessTable) updateSuccessAmount(success FundSuccessRecord, cus
 	return nil
 }
 
-func (table FundSuccessTable) isUnderDailyAmount(requestTime time.Time, amountToAdd float64) bool {
+func (table FundSuccessTable) isWithinDailyAmountLimit(requestTime time.Time, amountToAdd float64) bool {
 	year, month, day := requestTime.Date()
 	startDay := time.Date(year, month, day, 0, 0, 0, 0, time.UTC)
 	amount := getCumulativeAmountFunded(table, startDay, requestTime)
@@ -26,17 +27,19 @@ func (table FundSuccessTable) isUnderDailyAmount(requestTime time.Time, amountTo
 	return amount <= dailyAmountLimit
 }
 
-// TODO: This needs to always start on Monday at 00:00:00, not the past full week.
-func (table FundSuccessTable) isUnderWeeklyAmount(requestTime time.Time, amountToAdd float64) bool {
-	dailyOffset, _ := time.ParseDuration("-144h")
+func (table FundSuccessTable) isWithinWeeklyAmountLimit(requestTime time.Time, amountToAdd float64) bool {
+	weekDay := int(requestTime.Weekday())
+	numOffset := (24 * mod(weekDay-1, 7))
+	durationStr := fmt.Sprintf("-%vh", numOffset)
+	startOfWeekOffset, _ := time.ParseDuration(durationStr)
 	year, month, day := requestTime.Date()
-	startDay := time.Date(year, month, day, 0, 0, 0, 0, time.UTC).Add(dailyOffset)
+	startDay := time.Date(year, month, day, 0, 0, 0, 0, time.UTC).Add(startOfWeekOffset)
 	amount := getCumulativeAmountFunded(table, startDay, requestTime)
 	amount = amount + amountToAdd
 	return amount <= weeklyAmountLimit
 }
 
-func (table FundSuccessTable) isUnderDailyTransactions(requestTime time.Time) bool {
+func (table FundSuccessTable) isWithinDailyTransactionLimit(requestTime time.Time) bool {
 	year, month, day := requestTime.Date()
 	startDay := time.Date(year, month, day, 0, 0, 0, 0, time.UTC)
 	transactions := getCumulativeTransactions(table, startDay, requestTime) + 1

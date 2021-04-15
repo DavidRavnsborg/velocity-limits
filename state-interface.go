@@ -9,7 +9,6 @@ type FundSuccessRecord struct {
 	Id         string
 	LoadAmount float64
 	Time       time.Time
-	Accepted   bool
 }
 
 type ResponseLimits interface {
@@ -22,9 +21,9 @@ type Limits interface {
 }
 
 type VelocityLimits interface {
-	isUnderDailyAmount(requestTime time.Time, amountToAdd float64) bool
-	isUnderWeeklyAmount(requestTime time.Time, amountToAdd float64) bool
-	isUnderDailyTransactions(requestTime time.Time) bool
+	isWithinDailyAmountLimit(requestTime time.Time, amountToAdd float64) bool
+	isWithinWeeklyAmountLimit(requestTime time.Time, amountToAdd float64) bool
+	isWithinDailyTransactionLimit(requestTime time.Time) bool
 }
 
 func checkConditions(userTable Limits, responses ResponseLimits, id string, customerId string, amount float64, time time.Time) (accepted bool, err error) {
@@ -35,13 +34,13 @@ func checkConditions(userTable Limits, responses ResponseLimits, id string, cust
 	}
 
 	if accepted {
-		accepted = userTable.isUnderDailyAmount(time, amount)
+		accepted = userTable.isWithinDailyAmountLimit(time, amount)
 	}
 	if accepted {
-		accepted = userTable.isUnderWeeklyAmount(time, amount)
+		accepted = userTable.isWithinWeeklyAmountLimit(time, amount)
 	}
 	if accepted {
-		accepted = userTable.isUnderDailyTransactions(time)
+		accepted = userTable.isWithinDailyTransactionLimit(time)
 	}
 	return accepted, nil
 }

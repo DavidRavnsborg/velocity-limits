@@ -11,14 +11,18 @@ import (
 )
 
 const input_src = "input.txt"
-const output_src = "output-test.txt"
+const output_target = "output-test.txt"
+const output_src = "output.txt"
 
 var fundSuccessDB = make(FundSuccessDB)
 var responses = make(ResponsesTable, 0)
 
 func main() {
 	requests := loadData()
+	handleBatchRequests(requests)
+}
 
+func handleBatchRequests(requests []FundRequest) {
 	for _, req := range requests {
 		res, err := req.handleRequest()
 		if err != nil {
@@ -36,7 +40,10 @@ func main() {
 		output_buffer.WriteString(fmt.Sprintf(`{"id":"%s","customer_id":"%s","accepted":%v}`+"\n", response.Id, response.CustomerId, response.Accepted))
 	}
 
-	ioutil.WriteFile(output_src, output_buffer.Bytes(), 0666)
+	err := ioutil.WriteFile(output_target, output_buffer.Bytes(), 0666)
+	if err != nil {
+		handleError(err)
+	}
 }
 
 func loadData() []FundRequest {
@@ -91,7 +98,6 @@ func (req FundRequest) handleRequest() (res FundResponse, err error) {
 			Id:         req.Id,
 			LoadAmount: reqAmount,
 			Time:       reqTime,
-			Accepted:   accepted,
 		}, req.CustomerId)
 	}
 
