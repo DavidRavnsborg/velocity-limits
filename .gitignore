@@ -1,2 +1,5 @@
 *.exe
-output-test.txt
+*.go
+*.mod
+*.sum
+*.txt
