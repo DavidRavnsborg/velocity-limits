@@ -11,9 +11,9 @@ The resulting app loads the data into a custom array of structs using JSON de-se
 
 # How-to-run
 
-Assuming you have Go already installed, to run the application, call `go run .`. You can see my Go version in go.mod, if you need to check for compatibility. It should generate an `output-test.txt` file, that is identical to `output.txt`.
+Assuming you have Go already installed, to run the application, call `go run .`. You can see my Go version in `go.mod`, if you need to check for compatibility. It should generate an `output-test.txt` file, that is identical to `output.txt`.
 
-To Test the application, call `go test`, which will run tests in main_test.go, state_memory_db_successes.go, and state_memory_table_responses.go. main_test.go should also generate a new `output-test.txt` file, that is identical to `output.txt` (the test will fail if it isn't).
+To Test the application, call `go test`, which will run tests in `main_test.go`, `state_memory_db_successes.go`, and `state_memory_table_responses.go`. `main_test.go` should also generate a new `output-test.txt` file, that is identical to `output.txt` (the test will fail if it isn't).
 
 
 # My Development Notes
