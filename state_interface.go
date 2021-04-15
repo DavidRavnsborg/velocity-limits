@@ -15,18 +15,14 @@ type ResponseLimits interface {
 	isUniqueTransaction(id string, customerId string) bool
 }
 
-type Limits interface {
-	updateSuccessAmount(success FundSuccessRecord, customerId string) (err error)
-	VelocityLimits
-}
-
 type VelocityLimits interface {
+	updateSuccessAmount(success FundSuccessRecord, customerId string) (err error)
 	isWithinDailyAmountLimit(requestTime time.Time, amountToAdd float64) bool
 	isWithinWeeklyAmountLimit(requestTime time.Time, amountToAdd float64) bool
 	isWithinDailyTransactionLimit(requestTime time.Time) bool
 }
 
-func checkConditions(userTable Limits, responses ResponseLimits, id string, customerId string, amount float64, time time.Time) (accepted bool, err error) {
+func checkConditions(userTable VelocityLimits, responses ResponseLimits, id string, customerId string, amount float64, time time.Time) (accepted bool, err error) {
 	accepted = true
 
 	if !responses.isUniqueTransaction(id, customerId) {
