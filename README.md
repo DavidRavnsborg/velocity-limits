@@ -1,10 +1,20 @@
 # Overview
 
+This is my coding challenge for my KOHO Backend Developer application! This is the first app I have ever written in Go. I found Go to be relatively easy to learn, given its relatively small feature set. I also really appreciate working in a language with static type checking.
+
+The application loads the requests from the input.txt file and outputs the resolved requests to output-test.txt. If you run `go test`, it also runs generates the file main_test.go tests that the final `output-test.txt` and `output.txt` files match.
+
+I started off by planning how I would approach the problem. Initially, I was going to make a more complex version of this app that could have a input/state/output functions that would each accept an interface/interfaces. The idea was that you could, via dependency injection, provide the desired implementation of each part (e.g. in-memory database for state, vs. an actual persistent database vs. a filesystem based solution). However, I quickly realized how large a task this would be, especially in a new language, and instead opted to focus on the core design with good testing. Of input, state, and output, I only used interfaces on the state layer, with two interfaces: ResponseLimits and VelocityLimits. If you wanted to change the implementation of my ad-hoc in-memory database and table (FundSuccessDB and ResponsesTable) to real databases, you could create new types that implement ResponseLimits and VelocityLimits, that manage and fetch data from real databases. After creating the new interface implementations, you wouldn't need to modify anything else in the application except for the fields you pass to the checkConditions function for the interfaces ResponseLimits and VelocityLimits. 
+
+The resulting app loads the data into a custom array of structs using JSON de-serialization of the individual request strings. Those form the input Data Transfer Objects (DTOs), or request objects, which then get resolved into response objects. I purposely set it up so that it would be relatively easy to change the input/output layers to an HTTP server that receives and acts on individual requests. Although on an HTTP server you would make use of the handleRequest receiver method of FundRequest, rather than handleBatchRequestsWriteToFile which was written specifically to operate on batches of requests (in ascending time order).
+
+
 # How-to-run
 
-Run with `go run .`
+Assuming you have Go already installed, to run the application, call `go run .`. You can see my Go version in go.mod, if you need to check for compatibility. It should generate an `output-test.txt` file, that is identical to `output.txt`.
 
-Test with `go test`
+To Test the application, call `go test`, which will run tests in main_test.go, state_memory_db_successes.go, and state_memory_table_responses.go. main_test.go should also generate a new `output-test.txt` file, that is identical to `output.txt` (the test will fail if it isn't).
+
 
 # My Development Notes
 
@@ -19,9 +29,11 @@ I finished adding tests for the ResponsesTable and FundSuccessTable. I also fixe
 Create only one version given the time constraints, but design it using an interface that can be used by other versions for the persistence layer (I.e. if the persistence layer was a DB, the Go wrapper for it could implement the Limits interface). That will accomplish the extensible design I'm going for, while keeping complexity low, as this project is already taking quite a bit of my afterwork time. I'd rather polish the core design and testing of this app than try to cram more features into it.
 
 ## April 11, 2021
-Completed Go crash course. Start by creating the simplest version of the application.
+Completed most of Stephen Girder's "Go: The Complete Developer's Guide (Golang)" on Udemy over the weekend. Start the implementation now by starting with the simplest version of the application.
 
 Make it runnable with different command line args (simplest version first - easiest to implement):
+
+### EDIT: following the schema below, I actually implemented "local_file_memory_file" (not listed), since my completed solution runs locally (not deployed anywhere), loads data from a local file (input.txt), persists state in memory, and outputs to a local file (output-test.txt).
 
   `x. "{where it runs} _ {data input} _ {state persistence} _ {data output}"`
   1. "local_file_memory_std"        Runs locally, loading data from local file, persisting state in memory, outputting in std io. 
@@ -39,7 +51,6 @@ These would rightfully be interpreted as scope creep, but otherwise good ideas:
 - Have a config to run the application as a web app, and create another web app to send the original web app the input (a simple version of this could make a good test case for the local_http_file_http scenario though).
 - Purge db data older than a month (possibly with Cron job).
   - If I am getting into lifecycle management of data, I should be asking questions like "how long should my data persist for business, or regulatory reasons? Should there be backups? Etc."; but that level of detail doesn't exist for this problem. However, this would be a question to ask in a follow-up meeting with the client, product owner, lawyer, or stakeholder.
-
 
 
 # Problem Statement
