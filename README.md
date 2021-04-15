@@ -1,6 +1,6 @@
 # Overview
 
-This is my coding challenge for my KOHO Backend Developer application! This is the first app I have ever written in Go. I found Go to be relatively easy to learn, given its relatively small feature set. I also really appreciate working in a language with static type checking.
+This is my coding challenge for my KOHO Backend Developer application! This is the first app I have ever written in Go. Though I found Go to be relatively easy to learn, given its relatively small feature set. I also really appreciate working again in a language with static type checking.
 
 The application loads the requests from the `input.txt` file and outputs the resolved requests to `output-test.txt`. If you run `go test`, it also runs generates the file main_test.go tests that the final `output-test.txt` and `output.txt` files match.
 
