@@ -1,6 +1,6 @@
 # Overview
 
-This is my coding challenge for my KOHO Backend Developer application! This is the first app I have ever written in Go. Though I found Go to be relatively easy to learn, given its relatively small feature set. I also really appreciate working again in a language with static type checking.
+This is a coding challenge I did in the past to learn Go, and thus it is the first app I have written in Go.
 
 The application loads the requests from the `input.txt` file and outputs the resolved requests to `output-test.txt`. If you run `go test`, it also runs generates the file main_test.go tests that the final `output-test.txt` and `output.txt` files match.
 
@@ -85,9 +85,3 @@ For each load attempt, you should return a JSON response indicating whether the 
 You can assume that the input arrives in ascending chronological order and that if a load ID is observed more than once for a particular user, all but the first instance can be ignored. Each day is considered to end at midnight UTC, and weeks start on Monday (i.e. one second after 23:59:59 on Sunday).
 
 Your program should process lines from `input.txt` and return output in the format specified above, either to standard output or a file. Expected output given our input data can be found in `output.txt`.
-
-You're welcome to write your program in a general-purpose language of your choosing, but as we use Go on the back-end and TypeScript on the front-end, we do have a preference towards solutions written in Go (back-end) and TypeScript (front-end).
-
-We value well-structured, self-documenting code with sensible test coverage. Descriptive function and variable names are appreciated, as is isolating your business logic from the rest of your code. For example, consider decoupling input/output or data storage such that changing the underlying implementation wouldn't change how it is used from a client.
-
-Thanks for your interest in KOHO - have fun!
